@@ -1,0 +1,85 @@
+. $HOME/.cache/colorway/colors.sh
+
+# global settings
+yabai -m config \
+	mouse_follows_focus on \
+	focus_follows_mouse autofocus \
+	window_placement second_child \
+	auto_balance on \
+	window_origin_display cursor \
+	window_shadow off \
+	window_topmost on \
+	insert_feedback_color 0xff${colors[7]} \
+	mouse_modifier fn \
+	mouse_action1 move \
+	mouse_action2 resize \
+	mouse_drop_action swap \
+	layout bsp \
+	top_padding 3 \
+	bottom_padding 3 \
+	left_padding 3 \
+	right_padding 3 \
+	window_gap 5
+
+# float/manage windows
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^Notes$" manage=off
+yabai -m rule --add title="FLOATME" manage=off
+yabai -m rule --add title="VIMFLOAT" manage=off
+yabai -m rule --add title="VIMNOTES" manage=off
+yabai -m rule --add title="SCRATCHPAD" manage=off
+yabai -m rule --add title="SCRATCHTERM" manage=off
+yabai -m rule --add app="^Rocket.Chat" manage=off
+yabai -m rule --add app="^Godot" manage=off
+yabai -m rule --add app="^Karabiner" manage=off
+yabai -m rule --add app="^Spotify" manage=off
+yabai -m rule --add app="^System Information" manage=off
+yabai -m rule --add app="^Calendar$" manage=off
+yabai -m rule --add app="^Messages$" manage=off
+
+# signals
+# "application_launched",
+# "application_terminated",
+# "application_front_switched",
+# "application_activated",
+# "application_deactivated",
+# "application_visible",
+# "application_hidden",
+#
+# "window_created",
+# "window_destroyed",
+# "window_focused",
+# "window_moved",
+# "window_resized",
+# "window_minimized",
+# "window_deminimized",
+# "window_title_changed",
+#
+# "space_changed",
+#
+# "display_added",
+# "display_removed",
+# "display_moved",
+# "display_resized",
+# "display_changed",
+#
+# "mission_control_enter",
+# "mission_control_exit",
+#
+# "dock_did_restart",
+# "menu_bar_hidden_changed",
+# "dock_did_change_pref",
+
+# yabai -m signal --add event=space_changed action='yabai-space-switch --space $(yabai -m query --spaces --space | jq ".index")'
+
+if [ ! -d "$HOME/.cache/yabai/insert" ]; then
+	mkdir -p $HOME/.cache/yabai/insert/
+else
+	rm $HOME/.cache/yabai/insert/* 2>/dev/null
+fi
+
+# yabai -m config debug_output on
+
+echo "yabai configuration loaded.."
+
+# vim: ft=sh

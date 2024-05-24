@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+insCache="$HOME/.cache/yabai/insert"
+
+if [ ! -d "$insCache" ]; then
+	mkdir -p "$insCache"
+fi
+
+winId="$(yabai -m query --windows --window | jq .id)"
+
+previousDir=$(cat $insCache/$winId)
+
+insToggle() {
+	if find $insCache -name $winId >/dev/null; then
+		if [[ $previousDir != east ]]; then
+			echo east >$insCache/$winId
+
+			yabai -m window --insert east
+		else
+			yabai -m window --insert south
+
+			echo south >$insCache/$winId
+		fi
+	else
+		yabai -m window --insert east
+
+		echo east >$insCache/$winId
+	fi
+}
+
+case $1 in
+cancel) yabai -m window --insert $previousDir ;;
+*) insToggle ;;
+esac

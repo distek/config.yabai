@@ -1,0 +1,64 @@
+#!/bin/bash
+
+function getOldVal() {
+	dimArr=($(cat /tmp/$(echo "$1" | jq ".id")-yfs))
+
+	case "$2" in
+	w)
+		echo "${dimArr[0]}"
+		;;
+	h)
+		echo "${dimArr[1]}"
+		;;
+	x)
+		echo "${dimArr[2]}"
+		;;
+	y)
+		echo "${dimArr[3]}"
+		;;
+	esac
+}
+
+winCurrent="$(yabai -m query --windows --window)"
+
+if [[ $(echo "$winCurrent" | jq '."is-floating"') == "false" ]]; then
+	# managed
+	yabai -m window --toggle zoom-fullscreen
+else
+	# floating
+	w=$(echo "$winCurrent" | jq '.frame.w' | sed 's/\..*$//')
+	h=$(echo "$winCurrent" | jq '.frame.h' | sed 's/\..*$//')
+	x=$(echo "$winCurrent" | jq '.frame.x' | sed 's/\..*$//')
+	y=$(echo "$winCurrent" | jq '.frame.y' | sed 's/\..*$//')
+
+	# Try full-screening
+	yabai -m window --grid 1:1:0:0:1:1
+
+	winUpdated="$(yabai -m query --windows --window)"
+
+	# Use the values cause bash
+	echo "$w $h $x $y" >/dev/null
+
+	# Then compare if it was already fullscreen, if not, use the tmp file with
+	# the original frame details
+	if ((w == $(echo "$winUpdated" | jq '.frame.w' | sed 's/\..*$//'))) ||
+		((h == $(echo "$winUpdated" | jq '.frame.h' | sed 's/\..*$//'))); then
+		# Assume that the window is already fullscreen
+		if [ -f /tmp/$(echo "$winCurrent" | jq ".id")-yfs ]; then
+			oldW=$(getOldVal "$winCurrent" w)
+			oldH=$(getOldVal "$winCurrent" h)
+			oldX=$(getOldVal "$winCurrent" x)
+			oldY=$(getOldVal "$winCurrent" y)
+
+			yabai -m window --resize abs:${oldW}:${oldH}
+
+			yabai -m window --move abs:${oldX}:${oldY}
+		else
+			yabai -m window --grid 4:4:1:1:2:2
+
+			yabai -m query --windows --window >/tmp/$(echo "$winCurrent" | jq ".id")-yfs
+		fi
+	else
+		echo "${w} ${h} ${x} ${y}" >/tmp/$(echo "$winCurrent" | jq ".id")-yfs
+	fi
+fi

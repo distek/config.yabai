@@ -1,0 +1,30 @@
+#!/bin/bash
+
+options=(
+	"Screenshot"
+	"Screenshot (to clipboard)"
+	"Screen Record"
+)
+
+choice=$(for i in "${options[@]}"; do
+	echo "$i"
+done | fzf)
+
+if [ -z "$choice" ] || [[ "$choice" == "" ]]; then
+	exit
+fi
+
+case $choice in
+"${options[0]}")
+	nohup screencapture -i "$HOME/Desktop/Screen Shot $(date "+%Y-%m-%d at %H.%M.%S").png" &
+	sleep 0.1
+	;;
+"${options[1]}")
+	nohup screencapture -i -c >/tmp/screenshot.log &>/tmp/screenshot &
+	sleep 0.1
+	;;
+"${options[2]}")
+	nohup osascript -e 'tell application "QuickTime Player" to start New Screen Recording' &
+	sleep 0.1
+	;;
+esac
