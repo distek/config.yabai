@@ -1,9 +1,11 @@
 . $HOME/.cache/colorway/colors.sh
 
+sudo yabai --load-sa
+
 # global settings
 yabai -m config \
 	mouse_follows_focus on \
-	focus_follows_mouse autofocus \
+	focus_follows_mouse autoraise \
 	window_placement second_child \
 	auto_balance on \
 	window_origin_display cursor \
@@ -15,13 +17,15 @@ yabai -m config \
 	mouse_action2 resize \
 	mouse_drop_action swap \
 	layout bsp \
-	top_padding 3 \
-	bottom_padding 3 \
-	left_padding 3 \
-	right_padding 3 \
-	window_gap 5
+	external_bar all:35:0 \
+	top_padding 10 \
+	bottom_padding 10 \
+	left_padding 10 \
+	right_padding 10 \
+	window_gap 10
 
 # float/manage windows
+# yabai -m rule --add app="^.*$" manage=off
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Notes$" manage=off
 yabai -m rule --add title="FLOATME" manage=off
@@ -31,11 +35,24 @@ yabai -m rule --add title="SCRATCHPAD" manage=off
 yabai -m rule --add title="SCRATCHTERM" manage=off
 yabai -m rule --add app="^Rocket.Chat" manage=off
 yabai -m rule --add app="^Godot" manage=off
+yabai -m rule --add app="Godot Engine$" manage=on
 yabai -m rule --add app="^Karabiner" manage=off
 yabai -m rule --add app="^Spotify" manage=off
 yabai -m rule --add app="^System Information" manage=off
 yabai -m rule --add app="^Calendar$" manage=off
 yabai -m rule --add app="^Messages$" manage=off
+yabai -m rule --add app="^Obsidian$" manage=off
+yabai -m rule --add app="^GIMP$" title=".*" manage=off
+yabai -m rule --add app="^GIMP$" title=".*- GIMP$" manage=on
+yabai -m rule --add app="^Mod Organizer$" manage=off
+yabai -m rule --add app="^SkyrimSE.exe$" manage=off
+yabai -m rule --add app="^WezTerm$" sub-layer=auto
+yabai -m rule --add app="REAPER" title="Virtual MIDI Keyboard" manage=off
+yabai -m rule --add app="REAPER" title="REAPER Preferences" manage=off
+yabai -m rule --add app="REAPER" title="^MIDI take" manage=off
+
+yabai -m rule --apply
+# yabai -m rule --add app="^UnrealEngine$" manage=off
 
 # signals
 # "application_launched",
@@ -71,6 +88,8 @@ yabai -m rule --add app="^Messages$" manage=off
 # "dock_did_change_pref",
 
 # yabai -m signal --add event=space_changed action='yabai-space-switch --space $(yabai -m query --spaces --space | jq ".index")'
+# yabai -m signal --add event=window_focused action='~/.local/bin/yabai-karabiner'
+# yabai -m signal --add event=space_changed action='~/.local/bin/yabai-karabiner'
 
 if [ ! -d "$HOME/.cache/yabai/insert" ]; then
 	mkdir -p $HOME/.cache/yabai/insert/

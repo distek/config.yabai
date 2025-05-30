@@ -30,4 +30,4 @@ scratchpads:
   - name: "messages"
     app: "Messages"
     open-command: "open /System/Applications/Messages.app"
-scratchpad-workspace: 9
+# scratchpad-workspace: 9

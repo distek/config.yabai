@@ -23,7 +23,7 @@ winCurrent="$(yabai -m query --windows --window)"
 
 if [[ $(echo "$winCurrent" | jq '."is-floating"') == "false" ]]; then
 	# managed
-	yabai -m window --toggle zoom-fullscreen
+	yabai -m window --toggle windowed-fullscreen
 else
 	# floating
 	w=$(echo "$winCurrent" | jq '.frame.w' | sed 's/\..*$//')
